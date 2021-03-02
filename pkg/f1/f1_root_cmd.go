@@ -47,6 +47,7 @@ func Execute() {
 	pluginsPaths := []string{
 		"./pkg/fpsgateway_plugin/fpsgateway",
 		"./pkg/paymentapi_plugin/payment_api",
+		"/tmp/f1test",
 	}
 
 	for _, path := range pluginsPaths {
