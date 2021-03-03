@@ -4,6 +4,7 @@ import (
 	"fmt"
 	stdlog "log"
 	"os"
+	"path"
 	"path/filepath"
 	"time"
 
@@ -35,6 +36,8 @@ func getLogFilePath(scenario string) string {
 
 func redirectLoggingToFile(scenario string) string {
 	logFilePath := getLogFilePath(scenario)
+	dir := path.Dir(logFilePath)
+	os.MkdirAll(dir, 0755)
 
 	file, err := os.OpenFile(logFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600)
 	if err == nil {
