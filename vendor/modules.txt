@@ -75,9 +75,10 @@ github.com/mattn/go-isatty
 github.com/matttproud/golang_protobuf_extensions/pbutil
 # github.com/mitchellh/go-testing-interface v1.0.0
 github.com/mitchellh/go-testing-interface
-# github.com/naag/f1-api v0.0.0-20210303132545-b4c27d91919b
+# github.com/naag/f1-api v0.0.1
 ## explicit
 github.com/naag/f1-api/pkg/api
+github.com/naag/f1-api/pkg/plugin
 # github.com/oklog/run v1.0.0
 github.com/oklog/run
 # github.com/phayes/freeport v0.0.0-20180830031419-95f893ade6f2

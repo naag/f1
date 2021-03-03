@@ -2,24 +2,12 @@ package plugin
 
 import (
 	"os"
-	"os/exec"
 
 	"github.com/form3tech-oss/f1/pkg/f1/testing"
-	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/go-plugin"
 	"github.com/naag/f1-api/pkg/api"
+	f1plugin "github.com/naag/f1-api/pkg/plugin"
 )
-
-var handshakeConfig = plugin.HandshakeConfig{
-	ProtocolVersion:  1,
-	MagicCookieKey:   "BASIC_PLUGIN",
-	MagicCookieValue: "hello",
-}
-
-// pluginMap is the map of plugins we can dispense.
-var pluginMap = map[string]plugin.Plugin{
-	"scenarioPlugin": &api.ScenarioPlugin{},
-}
 
 func RegisterPlugin(p api.ScenarioPluginInterface) {
 	for _, scenarioName := range p.GetScenarios() {
@@ -46,37 +34,6 @@ func DiscoverPlugins() ([]string, error) {
 	return plugin.Discover("*-plugin", "~/.f1/plugins")
 }
 
-func Launch(pluginPath string) (*plugin.Client, api.ScenarioPluginInterface, error) {
-	logger := hclog.New(&hclog.LoggerOptions{
-		Name:   "plugin",
-		Output: os.Stdout,
-		Level:  hclog.Info,
-	})
-
-	client := plugin.NewClient(&plugin.ClientConfig{
-		HandshakeConfig: handshakeConfig,
-		Plugins:         pluginMap,
-		Cmd:             exec.Command(pluginPath),
-		Logger:          logger,
-	})
-
-	// Connect via RPC
-	rpcClient, err := client.Client()
-	if err != nil {
-		return nil, nil, err
-	}
-
-	// Request the plugin
-	raw, err := rpcClient.Dispense("scenarioPlugin")
-	if err != nil {
-		return nil, nil, err
-	}
-
-	// We should have a GetScenarios now! This feels like a normal interface
-	// implementation but is in fact over an RPC connection.
-	return client, raw.(api.ScenarioPluginInterface), nil
-}
-
 func LaunchAll() (func(), error) {
 	var clients []*plugin.Client
 
@@ -86,7 +43,7 @@ func LaunchAll() (func(), error) {
 	}
 
 	for _, path := range paths {
-		c, p, err := Launch(path)
+		c, p, err := f1plugin.NewClient(path)
 		if err != nil {
 			return nil, err
 		}
