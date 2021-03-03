@@ -1,8 +1,9 @@
 package common_plugin
 
 import (
-	"github.com/hashicorp/go-plugin"
 	"net/rpc"
+
+	"github.com/hashicorp/go-plugin"
 )
 
 // Client implementation
@@ -35,14 +36,7 @@ func (g *F1PluginRpcClient) SetupScenario(name string) error {
 
 func (g *F1PluginRpcClient) RunScenarioIteration(name string) error {
 	var err error
-
-	clientErr := g.client.Call("Plugin.RunScenarioIteration", name, err)
-	if clientErr != nil {
-		// You usually want your interfaces to return errors. If they don't,
-		// there isn't much other choice here.
-		panic(clientErr)
-	}
-
+	g.client.Call("Plugin.RunScenarioIteration", name, err)
 	return err
 }
 

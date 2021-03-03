@@ -20,6 +20,8 @@ github.com/davecgh/go-spew/spew
 # github.com/evalphobia/logrus_fluent v0.5.4
 ## explicit
 github.com/evalphobia/logrus_fluent
+# github.com/fatih/color v1.7.0
+github.com/fatih/color
 # github.com/fluent/fluent-logger-golang v1.5.0
 ## explicit
 github.com/fluent/fluent-logger-golang/fluent
@@ -32,9 +34,11 @@ github.com/golang/freetype/raster
 github.com/golang/freetype/truetype
 # github.com/golang/protobuf v1.4.3
 github.com/golang/protobuf/proto
+github.com/golang/protobuf/protoc-gen-go/descriptor
 github.com/golang/protobuf/ptypes
 github.com/golang/protobuf/ptypes/any
 github.com/golang/protobuf/ptypes/duration
+github.com/golang/protobuf/ptypes/empty
 github.com/golang/protobuf/ptypes/timestamp
 # github.com/google/uuid v1.2.0
 ## explicit
@@ -45,9 +49,10 @@ github.com/guptarohit/asciigraph
 # github.com/hako/durafmt v0.0.0-20200710122514-c0fb7b4da026
 ## explicit
 github.com/hako/durafmt
-# github.com/hashicorp/go-hclog v0.0.0-20180709165350-ff2cf002a8dd
+# github.com/hashicorp/go-hclog v0.14.1
+## explicit
 github.com/hashicorp/go-hclog
-# github.com/hashicorp/go-plugin v1.0.1
+# github.com/hashicorp/go-plugin v1.4.0
 ## explicit
 github.com/hashicorp/go-plugin
 github.com/hashicorp/go-plugin/internal/plugin
@@ -62,10 +67,17 @@ github.com/juju/errgo
 ## explicit
 github.com/magefile/mage/mg
 github.com/magefile/mage/sh
+# github.com/mattn/go-colorable v0.1.6
+github.com/mattn/go-colorable
+# github.com/mattn/go-isatty v0.0.12
+github.com/mattn/go-isatty
 # github.com/matttproud/golang_protobuf_extensions v1.0.1
 github.com/matttproud/golang_protobuf_extensions/pbutil
 # github.com/mitchellh/go-testing-interface v1.0.0
 github.com/mitchellh/go-testing-interface
+# github.com/naag/f1-api v0.0.0-20210303132545-b4c27d91919b
+## explicit
+github.com/naag/f1-api/pkg/api
 # github.com/oklog/run v1.0.0
 github.com/oklog/run
 # github.com/phayes/freeport v0.0.0-20180830031419-95f893ade6f2
@@ -201,6 +213,8 @@ google.golang.org/grpc/internal/transport/networktype
 google.golang.org/grpc/keepalive
 google.golang.org/grpc/metadata
 google.golang.org/grpc/peer
+google.golang.org/grpc/reflection
+google.golang.org/grpc/reflection/grpc_reflection_v1alpha
 google.golang.org/grpc/resolver
 google.golang.org/grpc/serviceconfig
 google.golang.org/grpc/stats
@@ -233,8 +247,10 @@ google.golang.org/protobuf/reflect/protoreflect
 google.golang.org/protobuf/reflect/protoregistry
 google.golang.org/protobuf/runtime/protoiface
 google.golang.org/protobuf/runtime/protoimpl
+google.golang.org/protobuf/types/descriptorpb
 google.golang.org/protobuf/types/known/anypb
 google.golang.org/protobuf/types/known/durationpb
+google.golang.org/protobuf/types/known/emptypb
 google.golang.org/protobuf/types/known/timestamppb
 # gopkg.in/workanator/go-ataman.v1 v1.0.0-20201223053604-e3b73d2e8108
 ## explicit

@@ -4,9 +4,10 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/form3tech-oss/f1/pkg/common_plugin"
 	"github.com/form3tech-oss/f1/pkg/f1/testing"
+	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/go-plugin"
+	"github.com/naag/f1-api/pkg/api"
 )
 
 var handshakeConfig = plugin.HandshakeConfig{
@@ -17,10 +18,10 @@ var handshakeConfig = plugin.HandshakeConfig{
 
 // pluginMap is the map of plugins we can dispense.
 var pluginMap = map[string]plugin.Plugin{
-	"scenarioplugin": &common_plugin.F1Plugin{},
+	"scenarioPlugin": &api.ScenarioPlugin{},
 }
 
-func RegisterPlugin(p common_plugin.F1PluginInterface) {
+func RegisterPlugin(p api.ScenarioPluginInterface) {
 	for _, scenarioName := range p.GetScenarios() {
 		copyScenario := scenarioName
 		setupFn := func(t *testing.T) (testing.RunFn, testing.TeardownFn) {
@@ -45,12 +46,18 @@ func DiscoverPlugins() ([]string, error) {
 	return plugin.Discover("*-plugin", "~/.f1/plugins")
 }
 
-func Launch(pluginPath string) (*plugin.Client, common_plugin.F1PluginInterface, error) {
-	// We're a host! Start by launching the plugin process.
+func Launch(pluginPath string) (*plugin.Client, api.ScenarioPluginInterface, error) {
+	logger := hclog.New(&hclog.LoggerOptions{
+		Name:   "plugin",
+		Output: os.Stdout,
+		Level:  hclog.Info,
+	})
+
 	client := plugin.NewClient(&plugin.ClientConfig{
 		HandshakeConfig: handshakeConfig,
 		Plugins:         pluginMap,
 		Cmd:             exec.Command(pluginPath),
+		Logger:          logger,
 	})
 
 	// Connect via RPC
@@ -60,14 +67,14 @@ func Launch(pluginPath string) (*plugin.Client, common_plugin.F1PluginInterface,
 	}
 
 	// Request the plugin
-	raw, err := rpcClient.Dispense("scenarioplugin")
+	raw, err := rpcClient.Dispense("scenarioPlugin")
 	if err != nil {
 		return nil, nil, err
 	}
 
 	// We should have a GetScenarios now! This feels like a normal interface
 	// implementation but is in fact over an RPC connection.
-	return client, raw.(common_plugin.F1PluginInterface), nil
+	return client, raw.(api.ScenarioPluginInterface), nil
 }
 
 func LaunchAll() (func(), error) {
