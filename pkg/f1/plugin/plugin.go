@@ -2,6 +2,7 @@ package plugin
 
 import (
 	"os"
+	"path"
 
 	"github.com/form3tech-oss/f1/pkg/f1/testing"
 	"github.com/hashicorp/go-plugin"
@@ -9,24 +10,26 @@ import (
 	f1plugin "github.com/naag/f1-api/pkg/plugin"
 )
 
-func RegisterPlugin(p api.ScenarioPluginInterface) {
+func RegisterPlugin(p api.ScenarioPluginInterface, pluginName string) {
 	for _, scenarioName := range p.GetScenarios() {
-		copyScenario := scenarioName
+		remoteName := scenarioName
+		localName := pluginName + "/" + remoteName
+
 		setupFn := func(t *testing.T) (testing.RunFn, testing.TeardownFn) {
-			p.SetupScenario(copyScenario)
+			p.SetupScenario(remoteName)
 
 			runFn := func(t *testing.T) {
-				p.RunScenarioIteration(copyScenario)
+				p.RunScenarioIteration(remoteName)
 			}
 
 			teardownFn := func(t *testing.T) {
-				p.StopScenario(copyScenario)
+				p.StopScenario(remoteName)
 			}
 
 			return runFn, teardownFn
 		}
 
-		testing.Add(copyScenario, setupFn)
+		testing.Add(localName, setupFn)
 	}
 }
 
@@ -42,14 +45,14 @@ func LaunchAll() (func(), error) {
 		return nil, err
 	}
 
-	for _, path := range paths {
-		c, p, err := f1plugin.NewClient(path)
+	for _, pluginPath := range paths {
+		c, p, err := f1plugin.NewClient(pluginPath)
 		if err != nil {
 			return nil, err
 		}
 
 		clients = append(clients, c)
-		RegisterPlugin(p)
+		RegisterPlugin(p, path.Base(pluginPath))
 	}
 
 	fn := func() {
