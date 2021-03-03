@@ -394,6 +394,8 @@ github.com/naag/f1-api v0.0.0-20210303140934-ad8fb60a7d37 h1:V94xNJ8baIHQ/Ni2CrU
 github.com/naag/f1-api v0.0.0-20210303140934-ad8fb60a7d37/go.mod h1:1kgwdHjS5vMfnlZP3UmlySYxMlsyFbp4JqW5Ud5Nzok=
 github.com/naag/f1-api v0.0.1 h1:uFl1O1MgbiMbcx6lCWl7nK03HFHPDpCW/zrqIFI92zs=
 github.com/naag/f1-api v0.0.1/go.mod h1:1kgwdHjS5vMfnlZP3UmlySYxMlsyFbp4JqW5Ud5Nzok=
+github.com/naag/f1-api v0.0.2 h1:ha2Rw4AlM700xEpS+xvhohJaPMxf/oVim/vSkUTwJoM=
+github.com/naag/f1-api v0.0.2/go.mod h1:1kgwdHjS5vMfnlZP3UmlySYxMlsyFbp4JqW5Ud5Nzok=
 github.com/nats-io/jwt v0.3.0/go.mod h1:fRYCDE99xlTsqUzISS1Bi75UBJ6ljOJQOAAu5VglpSg=
 github.com/nats-io/jwt v0.3.2/go.mod h1:/euKqTS1ZD+zzjYrY7pseZrTtWQSjujC7xjPc8wL6eU=
 github.com/nats-io/nats-server/v2 v2.1.2/go.mod h1:Afk+wRZqkMQs/p45uXdrVLuab3gwv3Z8C4HTBu8GD/k=

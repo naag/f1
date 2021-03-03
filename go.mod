@@ -20,7 +20,7 @@ require (
 	github.com/hashicorp/go-plugin v1.4.0
 	github.com/juju/errgo v0.0.0-20140925100237-08cceb5d0b53 // indirect
 	github.com/magefile/mage v1.11.0 // indirect
-	github.com/naag/f1-api v0.0.1
+	github.com/naag/f1-api v0.0.2
 	github.com/phayes/freeport v0.0.0-20180830031419-95f893ade6f2
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.9.0
