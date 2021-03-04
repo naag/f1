@@ -50,7 +50,6 @@ github.com/guptarohit/asciigraph
 ## explicit
 github.com/hako/durafmt
 # github.com/hashicorp/go-hclog v0.14.1
-## explicit
 github.com/hashicorp/go-hclog
 # github.com/hashicorp/go-plugin v1.4.0
 ## explicit
@@ -75,10 +74,13 @@ github.com/mattn/go-isatty
 github.com/matttproud/golang_protobuf_extensions/pbutil
 # github.com/mitchellh/go-testing-interface v1.0.0
 github.com/mitchellh/go-testing-interface
-# github.com/naag/f1-api v0.0.1
+# github.com/naag/f1-api v0.0.3
 ## explicit
+github.com/naag/f1-api/internal
 github.com/naag/f1-api/pkg/api
-github.com/naag/f1-api/pkg/plugin
+github.com/naag/f1-api/pkg/client
+github.com/naag/f1-api/pkg/logging
+github.com/naag/f1-api/pkg/rpc
 # github.com/oklog/run v1.0.0
 github.com/oklog/run
 # github.com/phayes/freeport v0.0.0-20180830031419-95f893ade6f2

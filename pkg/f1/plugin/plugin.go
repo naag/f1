@@ -7,23 +7,37 @@ import (
 	"github.com/form3tech-oss/f1/pkg/f1/testing"
 	"github.com/hashicorp/go-plugin"
 	"github.com/naag/f1-api/pkg/api"
-	f1plugin "github.com/naag/f1-api/pkg/plugin"
+	"github.com/naag/f1-api/pkg/client"
 )
 
-func RegisterPlugin(p api.ScenarioPluginInterface, pluginName string) {
-	for _, scenarioName := range p.GetScenarios() {
+func RegisterPlugin(p api.ScenarioPluginInterface, pluginName string) error {
+	scenarios, err := p.GetScenarios()
+	if err != nil {
+		return err
+	}
+
+	for _, scenarioName := range scenarios {
 		remoteName := scenarioName
 		localName := pluginName + "/" + remoteName
 
 		setupFn := func(t *testing.T) (testing.RunFn, testing.TeardownFn) {
-			p.SetupScenario(remoteName)
+			err := p.SetupScenario(remoteName)
+			if err != nil {
+				t.Fail()
+			}
 
 			runFn := func(t *testing.T) {
-				p.RunScenarioIteration(remoteName)
+				err := p.RunScenarioIteration(remoteName)
+				if err != nil {
+					t.Fail()
+				}
 			}
 
 			teardownFn := func(t *testing.T) {
-				p.StopScenario(remoteName)
+				err := p.StopScenario(remoteName)
+				if err != nil {
+					t.Fail()
+				}
 			}
 
 			return runFn, teardownFn
@@ -31,13 +45,15 @@ func RegisterPlugin(p api.ScenarioPluginInterface, pluginName string) {
 
 		testing.Add(localName, setupFn)
 	}
+
+	return nil
 }
 
 func DiscoverPlugins() ([]string, error) {
 	return plugin.Discover("*-plugin", "~/.f1/plugins")
 }
 
-func LaunchAll() (func(), error) {
+func LaunchAll(verbose bool) (func(), error) {
 	var clients []*plugin.Client
 
 	paths, err := plugin.Discover("*-plugin", pluginDir())
@@ -46,13 +62,21 @@ func LaunchAll() (func(), error) {
 	}
 
 	for _, pluginPath := range paths {
-		c, p, err := f1plugin.NewClient(pluginPath)
+		c, err := client.NewClient().
+			WithVerboseLogging(verbose).
+			Build(pluginPath).
+			Connect()
+
 		if err != nil {
 			return nil, err
 		}
 
-		clients = append(clients, c)
-		RegisterPlugin(p, path.Base(pluginPath))
+		clients = append(clients, c.Client)
+
+		err = RegisterPlugin(c.Impl, path.Base(pluginPath))
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	fn := func() {

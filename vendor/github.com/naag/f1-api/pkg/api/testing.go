@@ -6,7 +6,7 @@ import (
 	"strings"
 	"sync/atomic"
 
-	log "github.com/sirupsen/logrus"
+	"github.com/hashicorp/go-hclog"
 	"github.com/stretchr/testify/require"
 )
 
@@ -16,7 +16,7 @@ type T struct {
 	// Iteration number, "setup" or "teardown"
 	Iteration string
 	// Logger with user and iteration tags
-	Log         *log.Logger
+	Log         hclog.Logger
 	failed      int64
 	Require     *require.Assertions
 	Environment map[string]string
@@ -35,12 +35,12 @@ type RunFn func(t *T)
 // TeardownFn clears down any resources from a test run after all iterations complete.
 type TeardownFn RunFn
 
-func NewT(env map[string]string, vu, iter string, scenarioName string) *T {
+func NewT(vu, iter string, scenarioName string, log hclog.Logger) *T {
 	t := &T{
 		VirtualUser: vu,
 		Iteration:   iter,
-		Log:         log.WithField("u", vu).WithField("i", iter).WithField("scenario", scenarioName).Logger,
-		Environment: env,
+		Log:         log,
+		Environment: loadEnvironment(log),
 		Scenario:    scenarioName,
 	}
 	t.Require = require.New(t)
@@ -49,35 +49,40 @@ func NewT(env map[string]string, vu, iter string, scenarioName string) *T {
 
 func (t *T) Errorf(format string, args ...interface{}) {
 	atomic.StoreInt64(&t.failed, int64(1))
-	t.Log.Errorf(format, args...)
+	if format == "\n%s" {
+		msg := args[0].(string)
+		t.Log.Debug(msg, args[1:]...)
+	} else {
+		t.Log.Trace(format, args...)
+	}
 }
 
 func (t *T) FailNow() {
 	atomic.StoreInt64(&t.failed, int64(1))
-	t.Log.Errorf("test failed and stopped")
+	t.Log.Error("test failed and stopped")
 	runtime.Goexit()
 }
 
 func (t *T) Fail() {
 	atomic.StoreInt64(&t.failed, int64(1))
-	t.Log.Errorf("test failed")
+	t.Log.Error("test failed")
 }
 
 func (t *T) FailWithError(err error) {
 	atomic.StoreInt64(&t.failed, int64(1))
-	t.Log.WithError(err).Errorf("test failed due to %s", err.Error())
+	t.Log.With("error", err.Error()).Error("test failed")
 }
 
 func (t *T) HasFailed() bool {
 	return atomic.LoadInt64(&t.failed) == int64(1)
 }
 
-func LoadEnvironment() map[string]string {
+func loadEnvironment(log hclog.Logger) map[string]string {
 	env := make(map[string]string)
 	for _, e := range os.Environ() {
 		keyAndValue := strings.SplitN(e, "=", 2)
 		if len(keyAndValue) < 2 {
-			log.Warnf("Malformed environment variable was not loaded: %s", e)
+			log.Warn("Malformed environment variable was not loaded", "variable", e)
 			continue
 		}
 		env[keyAndValue[0]] = keyAndValue[1]

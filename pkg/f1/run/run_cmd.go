@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/form3tech-oss/f1/pkg/f1/options"
+	"github.com/form3tech-oss/f1/pkg/f1/plugin"
 
 	"github.com/pkg/errors"
 
@@ -126,6 +127,13 @@ func runCmdExecute(t api.Builder, hookFunc logging.RegisterLogHookFunc) func(cmd
 		if err != nil {
 			return err
 		}
+
+		shutdown, err := plugin.LaunchAll(verbose)
+		if err != nil {
+			return err
+		}
+		defer shutdown()
+
 		result := run.Do()
 		if result.Error() != nil {
 			return result.Error()

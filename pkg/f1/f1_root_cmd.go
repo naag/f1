@@ -9,7 +9,6 @@ import (
 	"github.com/form3tech-oss/f1/internal/support/errorh"
 
 	"github.com/form3tech-oss/f1/pkg/f1/fluentd_hook"
-	"github.com/form3tech-oss/f1/pkg/f1/plugin"
 
 	"github.com/form3tech-oss/f1/pkg/f1/scenarios"
 
@@ -43,15 +42,6 @@ func buildRootCmd() *cobra.Command {
 }
 
 func Execute() {
-	shutdown, err := plugin.LaunchAll()
-	if err != nil {
-		writeProfiles()
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	defer shutdown()
-
 	if err := buildRootCmd().Execute(); err != nil {
 		writeProfiles()
 		fmt.Println(err)
@@ -94,17 +84,9 @@ func writeProfiles() {
 }
 
 func ExecuteWithArgs(args []string) error {
-	shutdown, err := plugin.LaunchAll()
-	if err != nil {
-		writeProfiles()
-		return err
-	}
-
-	defer shutdown()
-
 	rootCmd := buildRootCmd()
 	rootCmd.SetArgs(args)
-	err = rootCmd.Execute()
+	err := rootCmd.Execute()
 	writeProfiles()
 	return err
 }

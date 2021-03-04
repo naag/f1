@@ -16,11 +16,10 @@ require (
 	github.com/google/uuid v1.2.0
 	github.com/guptarohit/asciigraph v0.5.1
 	github.com/hako/durafmt v0.0.0-20200710122514-c0fb7b4da026
-	github.com/hashicorp/go-hclog v0.14.1 // indirect
 	github.com/hashicorp/go-plugin v1.4.0
 	github.com/juju/errgo v0.0.0-20140925100237-08cceb5d0b53 // indirect
 	github.com/magefile/mage v1.11.0 // indirect
-	github.com/naag/f1-api v0.0.2
+	github.com/naag/f1-api v0.0.3
 	github.com/phayes/freeport v0.0.0-20180830031419-95f893ade6f2
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.9.0
@@ -75,3 +74,5 @@ replace (
 	k8s.io/metrics => k8s.io/metrics v0.15.11
 	k8s.io/sample-apiserver => k8s.io/sample-apiserver v0.15.11
 )
+
+// replace github.com/naag/f1-api => /home/buecker/go/src/github.com/naag/f1-api

@@ -126,7 +126,6 @@ func (r *Run) configureLogging() {
 		r.result.LogFile = redirectLoggingToFile(r.Options.Scenario)
 		welcomeMessage := renderTemplate(startTemplate, r)
 		log.Info(welcomeMessage)
-		fmt.Printf("Saving logs to %s\n\n", r.result.LogFile)
 	}
 }
 
